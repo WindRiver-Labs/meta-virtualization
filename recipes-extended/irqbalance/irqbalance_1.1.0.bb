@@ -12,4 +12,5 @@ SRC_URI = "https://github.com/Irqbalance/irqbalance/archive/v${PV}.tar.gz;downlo
            file://irqbalance-Add-status-and-reload-commands.patch \
            file://fix-configure-libcap-ng.patch \
            file://irqbalanced.service \
+           file://irqbalance_1.1.0-fix-procinterrupts.c-source.patch \
           "
