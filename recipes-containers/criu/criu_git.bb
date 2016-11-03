@@ -23,11 +23,13 @@ SRC_URI = "git://github.com/xemul/criu.git;protocol=git \
            file://0001-criu-Change-libraries-install-directory.patch \
            ${@bb.utils.contains('PACKAGECONFIG', 'selinux', '', 'file://disable-selinux.patch', d)} \
            file://lib-Makefile-overwrite-install-lib-to-allow-multiarc.patch \
+           file://0001-criu-Correct-the-installation-directory-for-python-m.patch \
           "
 
 COMPATIBLE_HOST = "(x86_64|arm|aarch64).*-linux"
 
 DEPENDS += "libnl libcap protobuf-c-native protobuf-c util-linux-native"
+RDEPENDS_${PN} = "bash"
 
 S = "${WORKDIR}/git"
 
@@ -42,6 +44,7 @@ EXTRA_OEMAKE_aarch64 += "ARCH=arm64 WERROR=0"
 
 EXTRA_OEMAKE_append += "SBINDIR=${sbindir} LIBDIR=${libdir} INCLUDEDIR=${includedir} PIEGEN=no"
 EXTRA_OEMAKE_append += "LOGROTATEDIR=${sysconfdir} SYSTEMDUNITDIR=${systemd_unitdir}"
+EXTRA_OEMAKE_append += "PYTHON_SITEPACKAGES_DIR=${PYTHON_SITEPACKAGES_DIR}"
 
 CFLAGS += "-D__USE_GNU -D_GNU_SOURCE " 
 
@@ -52,7 +55,6 @@ export LDFLAGS=""
 
 export BUILD_SYS
 export HOST_SYS
-
 inherit setuptools
 
 PACKAGECONFIG ??= ""
