@@ -15,6 +15,7 @@ SRC_URI[md5sum] = "14a532a7538551d5def317bfca41dace"
 SRC_URI[sha256sum] = "0a0ae63cbffc274efb573bdde9a253e3f32e458c41261df51c5dbc5ad541e8f7"
 SRC_URI = "https://github.com/google/protobuf/archive/v3.1.0.tar.gz;downloadfilename=protobuf-3.1.0.tar.gz\
 	        file://protobuf-allow-running-python-scripts-from-anywhere.patch \
+	        file://0001-protobuf-examples-fix-QA-warning-for-GNU_HASH.patch \
 	        file://run-ptest \
             "
 
