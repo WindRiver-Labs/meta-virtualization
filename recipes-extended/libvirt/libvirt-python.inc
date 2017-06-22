@@ -32,7 +32,7 @@ LIBVIRT_INSTALL_ARGS = "--root=${D} \
     --install-data=${datadir}"
 
 python __anonymous () {
-    pkgconfig = d.getVar('PACKAGECONFIG')
+    pkgconfig = d.getVar('PACKAGECONFIG', True)
     if ('python') in pkgconfig.split():
         d.setVar('LIBVIRT_PYTHON_ENABLE', '1')
     else:
