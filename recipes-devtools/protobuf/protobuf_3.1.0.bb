@@ -19,8 +19,6 @@ SRC_URI = "https://github.com/google/protobuf/archive/v3.1.0.tar.gz;downloadfile
 	        file://run-ptest \
             "
 
-COMPATIBLE_HOST = "(x86_64|arm|aarch64).*-linux"
-
 EXTRA_OECONF += " --with-protoc=${STAGING_BINDIR_NATIVE}/protoc"
 inherit autotools setuptools ptest
 
