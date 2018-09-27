@@ -1,0 +1,32 @@
+From 981e2582128911d0b131cb47aeb88005b04b38fe Mon Sep 17 00:00:00 2001
+From: Changqing Li <changqing.li@windriver.com>
+Date: Thu, 27 Sep 2018 12:54:42 +0800
+Subject: [PATCH] fix do_package_qa error
+
+fix below error:
+do_package_qa: QA Issue: ELF binary 'xxx/usr/sbin/oci-image-tool' 
+has relocations in .text [textrel]
+
+Upstream-Status: Inappropriate [oe-specific]
+
+Signed-off-by: Changqing Li <changqing.li@windriver.com>
+---
+ src/import/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/import/Makefile b/src/import/Makefile
+index 61d7a80..7e641e9 100644
+--- a/src/import/Makefile
++++ b/src/import/Makefile
+@@ -29,7 +29,7 @@ check-license:
+ 
+ .PHONY: tool
+ tool:
+-	go build -ldflags "-X main.gitCommit=${COMMIT}" -o oci-image-tool ./cmd/oci-image-tool
++	go build -ldflags "-X main.gitCommit=${COMMIT}" ${GOBUILDFLAGS} -o oci-image-tool ./cmd/oci-image-tool
+ 
+ 
+ all: tool man
+-- 
+2.7.4
+
