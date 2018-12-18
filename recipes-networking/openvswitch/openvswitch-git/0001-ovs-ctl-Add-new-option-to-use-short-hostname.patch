@@ -1,0 +1,63 @@
+From 48091ad4e2417df5494be1a61378785d3bae9733 Mon Sep 17 00:00:00 2001
+From: "Hongzhi.Song" <hongzhi.song@windriver.com>
+Date: Mon, 17 Dec 2018 04:16:24 -0500
+Subject: [PATCH] ovs-ctl: Add new option to use short hostname
+
+Current ovs-ctl forces to set full hostname in external-ids. In
+some situation users may want to set short hostname. For example,
+in OpenStack - OVN integration, Neutron uses the host-id provided
+by Nova, which is usually short hostname, to set "requested-chassis"
+in OVN. The mismatch in hypervisor's external-ids:hostname setting
+causes OVN port binding failure. It can be overridden to short name
+but a openvswitch restart using ovs-ctl would again set it to full
+hostname. This patch ensures in such use cases --no-full-hostname
+can be specified to ovs-ctl to set short hostname instead.
+
+Signed-off-by: Han Zhou <hzhou8@ebay.com>
+Signed-off-by: Ben Pfaff <blp@ovn.org>
+
+Upstream-Status: Backport [298115b94] and [dd091e163].
+
+Signed-off-by: Hongzhi.Song <hongzhi.song@windriver.com>
+---
+ utilities/ovs-ctl.in | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/utilities/ovs-ctl.in b/utilities/ovs-ctl.in
+index 43c8f32..ca5e1dd 100755
+--- a/utilities/ovs-ctl.in
++++ b/utilities/ovs-ctl.in
+@@ -38,7 +38,12 @@ insert_mod_if_required () {
+ set_hostname () {
+     # 'hostname -f' needs network connectivity to work.  So we should
+     # call this only after ovs-vswitchd is running.
+-    ovs_vsctl set Open_vSwitch . external-ids:hostname="$(hostname -f)"
++    if test X$FULL_HOSTNAME = Xyes; then
++        hn="$(hostname -f)" || hn="$(uname -n)"
++    else
++        hn="$(uname -n)"
++    fi
++    ovs_vsctl set Open_vSwitch . external-ids:hostname="$hn"
+ }
+ 
+ set_system_ids () {
+@@ -291,6 +296,8 @@ enable_protocol () {
+ set_defaults () {
+     SYSTEM_ID=
+ 
++    FULL_HOSTNAME=yes
++
+     DELETE_BRIDGES=no
+     DELETE_TRANSIENT_PORTS=no
+ 
+@@ -376,6 +383,7 @@ Less important options for "start", "restart" and "force-reload-kmod":
+   --no-mlockall                  do not lock all of ovs-vswitchd into memory
+   --ovsdb-server-priority=NICE   set ovsdb-server's niceness (default: $OVSDB_SERVER_PRIORITY)
+   --ovs-vswitchd-priority=NICE   set ovs-vswitchd's niceness (default: $OVS_VSWITCHD_PRIORITY)
++  --no-full-hostname             set short hostname instead of full hostname
+ 
+ Debugging options for "start", "restart" and "force-reload-kmod":
+   --ovsdb-server-wrapper=WRAPPER
+-- 
+2.8.1
+
