@@ -18,7 +18,6 @@ INITSCRIPT_PARAMS = "start 8 2 3 4 5 . stop 20 0 1 6 ."
 # where systemd is in use.
 SYSTEMD_PACKAGES = "${PN}"
 SYSTEMD_SERVICE_${PN} = "cgroups-init.service"
-SYSTEMD_AUTO_ENABLE_${PN} = "mask"
 
 
 do_install() {
