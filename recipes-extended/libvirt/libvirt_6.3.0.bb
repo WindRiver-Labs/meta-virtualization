@@ -197,7 +197,7 @@ PRIVATE_LIBS_${PN}-ptest = " \
 #PACKAGECONFIG ??= "xen libxl xen-inotify test remote libvirtd"
 
 # full config
-PACKAGECONFIG ??= "qemu yajl openvz vmware vbox esx iproute2 lxc test \
+PACKAGECONFIG ??= "gnutls qemu yajl openvz vmware vbox esx iproute2 lxc test \
                    remote macvtap libvirtd netcf udev python ebtables \
                    fuse iproute2 firewalld libpcap \
                    ${@bb.utils.contains('DISTRO_FEATURES', 'selinux', 'selinux audit libcap-ng', '', d)} \
