@@ -10,3 +10,4 @@ SRC_URI = "\
         git://github.com/containernetworking/plugins.git;branch=v0.7;destsuffix=plugins;name=plugins \
 	"
 PV = "0.7.1"
+COMPATIBLE_HOST_mips = "null"
