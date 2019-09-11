@@ -11,8 +11,8 @@ is simple to implement. \
 
 # 0.7.1
 SRCREV_cni = "4cfb7b568922a3c79a23e438dc52fe537fc9687e"
-# 0.7.5
-SRCREV_plugins = "a62711a5da7a2dc2eb93eac47e103738ad923fd6"
+# 0.7.6
+SRCREV_plugins = "9f96827c7cabb03f21d86326000c00f61e181f6a"
 SRC_URI = "\
 	git://github.com/containernetworking/cni.git;branch=master;name=cni \
         git://github.com/containernetworking/plugins.git;branch=v0.7;destsuffix=plugins;name=plugins \
