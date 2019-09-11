@@ -1,0 +1,31 @@
+From 17a5d70843cb8b5ed507b21b9323f2709a57c60a Mon Sep 17 00:00:00 2001
+From: Chen Qi <Qi.Chen@windriver.com>
+Date: Thu, 12 Sep 2019 09:17:21 +0800
+Subject: [PATCH] version.sh: get rid of '-dirty'
+
+We only change scripts related to cross compilation, not the real codes.
+So just the the '-dirty' suffix in version.
+
+Upstream-Status: Inappropriate [OE Specific]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ hack/lib/version.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/src/import/hack/lib/version.sh b/src/import/hack/lib/version.sh
+index 1b7665b467a..e11149a1788 100644
+--- a/src/import/hack/lib/version.sh
++++ b/src/import/hack/lib/version.sh
+@@ -82,7 +82,7 @@ kube::version::get_version_vars() {
+         # git describe --dirty only considers changes to existing files, but
+         # that is problematic since new untracked .go files affect the build,
+         # so use our idea of "dirty" from git status instead.
+-        KUBE_GIT_VERSION+="-dirty"
++        KUBE_GIT_VERSION+=""
+       fi
+ 
+ 
+-- 
+2.17.1
+
