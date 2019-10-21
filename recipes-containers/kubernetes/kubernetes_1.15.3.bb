@@ -12,6 +12,7 @@ SRC_URI = "git://github.com/kubernetes/kubernetes.git;branch=release-1.15 \
            file://0001-cross-don-t-build-tests-by-default.patch \
            file://0001-version.sh-get-rid-of-dirty.patch \
            file://0001-fix-compiling-failure-execvp-bin-bash-Argument-list-.patch \
+           file://0001-Hide-bearer-token-in-logs.patch \
           "
 
 DEPENDS += "rsync-native \
