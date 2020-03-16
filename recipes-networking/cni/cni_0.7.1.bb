@@ -27,6 +27,8 @@ GO_IMPORT = "import"
 
 PV = "0.7.1"
 
+COMPATIBLE_HOST_mips = "null"
+
 inherit go
 inherit goarch
 
