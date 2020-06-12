@@ -12,6 +12,8 @@ SRC_URI = "git://github.com/kubernetes/kubernetes.git;branch=release-1.17 \
            file://0001-cross-don-t-build-tests-by-default.patch \
           "
 
+SRC_URI_append_arm = " file://0001-fix-arm-node-failed-to-join-master-node.patch"
+
 DEPENDS += "rsync-native \
             coreutils-native \
            "
