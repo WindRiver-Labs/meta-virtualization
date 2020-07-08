@@ -24,6 +24,8 @@ SRC_URI = "\
 	git://github.com/docker/docker-ce.git;branch=18.09;name=docker \
 	git://github.com/docker/libnetwork.git;branch=bump_18.09;name=libnetwork;destsuffix=git/libnetwork \
 	file://0001-libnetwork-use-GO-instead-of-go.patch \
+	file://0001-dynbinary-use-go-cross-compiler.patch \
+	file://0001-cli-use-go-cross-compiler.patch \
 	file://docker.init \
 	"
 
