@@ -4,26 +4,23 @@ Date: Tue, 30 Jun 2020 22:23:33 -0400
 Subject: [PATCH] dynbinary: use go cross compiler
 
 Signed-off-by: Bruce Ashfield <bruce.ashfield@gmail.com>
-
-fresh patch to 18.09.9
-Signed-off-by: Changqing Li <changqing.li@windriver.com>
 ---
- src/import/components/engine/hack/make/.binary | 2 +-
+ hack/make/.binary | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/src/import/components/engine/hack/make/.binary b/src/import/components/engine/hack/make/.binary
-index ff33e18..82854bd 100644
+index 53de6749e5..47ab2a754f 100644
 --- a/src/import/components/engine/hack/make/.binary
 +++ b/src/import/components/engine/hack/make/.binary
-@@ -60,7 +60,7 @@ case "$(go env GOOS)/$(go env GOARCH)" in
- esac
+@@ -81,7 +81,7 @@ esac
  
  echo "Building: $DEST/$BINARY_FULLNAME"
+ echo "GOOS=\"${GOOS}\" GOARCH=\"${GOARCH}\" GOARM=\"${GOARM}\""
 -go build \
 +${GO} build \
  	-o "$DEST/$BINARY_FULLNAME" \
  	"${BUILDFLAGS[@]}" \
  	-ldflags "
 -- 
-2.26.2
+2.19.1
 
