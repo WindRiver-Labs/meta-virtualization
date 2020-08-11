@@ -18,31 +18,35 @@ DESCRIPTION = "Linux container runtime \
  subtle and/or glaring issues. \
  "
 
-SRCREV_docker = "039a7df9ba8097dd987370782fcdd6ea79b26016"
-SRCREV_libnetwork = "55685ba49593e67f5e1c8180539379b16736c25e"
+SRCREV_docker = "48a66213fe1747e8873f849862ff3fb981899fc6"
+SRCREV_libnetwork = "026aabaa659832804b01754aaadd2c0f420c68b6"
 SRC_URI = "\
-	git://github.com/docker/docker-ce.git;branch=18.09;name=docker \
-	git://github.com/docker/libnetwork.git;branch=bump_18.09;name=libnetwork;destsuffix=git/libnetwork \
+	git://github.com/docker/docker-ce.git;branch=19.03;name=docker \
+	git://github.com/docker/libnetwork.git;branch=bump_19.03;name=libnetwork;destsuffix=git/libnetwork \
 	file://0001-libnetwork-use-GO-instead-of-go.patch \
-	file://0001-dynbinary-use-go-cross-compiler.patch \
-	file://0001-cli-use-go-cross-compiler.patch \
 	file://docker.init \
+	file://0001-imporve-hardcoded-CC-on-cross-compile-docker-ce.patch \
+        file://0001-dynbinary-use-go-cross-compiler.patch \
+        file://0001-cli-use-go-cross-compiler.patch \
 	"
 
 require docker.inc
 
 # Apache-2.0 for docker
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://src/import/components/engine/LICENSE;md5=9740d093a080530b5c5c6573df9af45a"
+LIC_FILES_CHKSUM = "file://src/import/components/engine/LICENSE;md5=4859e97a9c7780e77972d989f0823f28"
 
 GO_IMPORT = "import"
 
 S = "${WORKDIR}/git"
-DOCKER_VERSION = "18.09.9"
+
+DOCKER_VERSION = "19.03.12"
 
 PACKAGES =+ "${PN}-contrib"
 
 DOCKER_PKG="github.com/docker/docker"
+# in order to exclude devicemapper and btrfs - https://github.com/docker/docker/issues/14056
+BUILD_TAGS = "exclude_graphdriver_btrfs exclude_graphdriver_devicemapper"
 
 inherit go
 inherit goarch
@@ -70,8 +74,7 @@ do_compile() {
 	export CGO_ENABLED="1"
 	export CGO_CFLAGS="${CFLAGS} --sysroot=${STAGING_DIR_TARGET}"
 	export CGO_LDFLAGS="${LDFLAGS} --sysroot=${STAGING_DIR_TARGET}"
-	# in order to exclude devicemapper and btrfs - https://github.com/docker/docker/issues/14056
-	export DOCKER_BUILDTAGS='exclude_graphdriver_btrfs exclude_graphdriver_devicemapper'
+	export DOCKER_BUILDTAGS='${BUILD_TAGS} ${PACKAGECONFIG_CONFARGS}'
 
 	export DISABLE_WARN_OUTSIDE_CONTAINER=1
 
@@ -98,7 +101,7 @@ do_compile() {
 do_install() {
 	mkdir -p ${D}/${bindir}
 	cp ${S}/src/import/components/cli/build/docker ${D}/${bindir}/docker
-	cp ${S}/src/import/components/engine/bundles/latest/dynbinary-daemon/dockerd ${D}/${bindir}/dockerd
+	cp ${S}/src/import/components/engine/bundles/dynbinary-daemon/dockerd ${D}/${bindir}/dockerd
 	cp ${WORKDIR}/git/libnetwork/bin/docker-proxy* ${D}/${bindir}/docker-proxy
 
 	if ${@bb.utils.contains('DISTRO_FEATURES','systemd','true','false',d)}; then
@@ -112,8 +115,12 @@ do_install() {
 		install -m 0755 ${WORKDIR}/docker.init ${D}${sysconfdir}/init.d/docker.init
 	fi
 	# TLS key that docker creates at run-time if not found is what resides here
-	install -d ${D}${sysconfdir}
-	ln -s ..${localstatedir}/run/docker ${D}${sysconfdir}/docker
+	if ${@bb.utils.contains('PACKAGECONFIG','transient-config','true','false',d)}; then
+		install -d ${D}${sysconfdir}
+		ln -s ..${localstatedir}/run/docker ${D}${sysconfdir}/docker
+	else
+		install -d ${D}${sysconfdir}/docker
+	fi
 
 	mkdir -p ${D}${datadir}/docker/
 	install -m 0755 ${S}/src/import/components/engine/contrib/check-config.sh ${D}${datadir}/docker/
@@ -123,21 +130,3 @@ FILES_${PN} += "${systemd_unitdir}/system/* ${sysconfdir}/docker"
 
 FILES_${PN}-contrib += "${datadir}/docker/check-config.sh"
 RDEPENDS_${PN}-contrib += "bash"
-
-RRECOMMENDS_${PN} += " \
-    kernel-module-xt-masquerade \
-    kernel-module-xt-addrtype \
-    kernel-module-nf-conntrack-netlink \
-    kernel-module-nfnetlink \
-    kernel-module-xfrm-user \
-    kernel-module-iptable-nat \
-    kernel-module-xt-addrtype \
-    kernel-module-iptable-filter \
-    kernel-module-ip-tables \
-    kernel-module-xt-conntrack \
-    kernel-module-x-tables \
-    kernel-module-br-netfilter \
-    kernel-module-bridge \
-    kernel-module-stp \
-    kernel-module-llc \
-"
