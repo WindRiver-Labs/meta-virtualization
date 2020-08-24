@@ -5,9 +5,11 @@ applications across multiple hosts, providing basic mechanisms for deployment, \
 maintenance, and scaling of applications. \
 "
 
-SRCREV = "e0fccafd69541e3750d460ba0f9743b90336f24f"
+SRCREV_kubernetes = "9f2892aab98fe339f3bd70e3c470144299398ace"
+SRCREV_kubernetes-release = "c600d12013979543fcfab24c977ffae158405a21"
 
-SRC_URI = "git://github.com/kubernetes/kubernetes.git;branch=release-1.17 \
+SRC_URI = "git://github.com/kubernetes/kubernetes.git;branch=release-1.18;name=kubernetes \
+           git://github.com/kubernetes/release;branch=master;name=kubernetes-release;destsuffix=git/release \
            file://0001-hack-lib-golang.sh-use-CC-from-environment.patch \
            file://0001-cross-don-t-build-tests-by-default.patch \
           "
@@ -75,8 +77,8 @@ do_install() {
 
     install -m 755 -D ${S}/src/import/_output/local/bin/${TARGET_GOOS}/${TARGET_GOARCH}/* ${D}/${bindir}
 
-    install -m 0644 ${S}/src/import/build/debs/kubelet.service  ${D}${systemd_unitdir}/system/
-    install -m 0644 ${S}/src/import/build/debs/10-kubeadm.conf  ${D}${systemd_unitdir}/system/kubelet.service.d/
+    install -m 0644 ${WORKDIR}/git/release/cmd/kubepkg/templates/latest/deb/kubelet/lib/systemd/system/kubelet.service ${D}${systemd_unitdir}/system/
+    install -m 0644 ${WORKDIR}/git/release/cmd/kubepkg/templates/latest/deb/kubeadm/10-kubeadm.conf  ${D}${systemd_unitdir}/system/kubelet.service.d/
 }
 
 PACKAGES =+ "kubeadm kubectl kubelet kube-proxy ${PN}-misc"
@@ -90,7 +92,9 @@ INSANE_SKIP_${PN}-misc += "ldflags already-stripped"
 RDEPENDS_${PN} += "kubeadm \
                    kubectl \
                    kubelet \
-                   cni"
+                   cni \
+                   conntrack-tools \
+                  "
 
 RDEPENDS_kubeadm = "kubelet kubectl"
 FILES_kubeadm = "${bindir}/kubeadm ${systemd_unitdir}/system/kubelet.service.d/*"
