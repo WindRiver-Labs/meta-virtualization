@@ -1,0 +1,43 @@
+From 66b48fb029f67e7fe452bca272d6cffce805b707 Mon Sep 17 00:00:00 2001
+From: Wiktor Kwapisiewicz <wiktor@metacode.biz>
+Date: Tue, 28 May 2019 13:29:07 +0200
+Subject: [PATCH] Change docker socket location to /run/docker.sock
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+This change resolves the following systemd warning:
+
+```
+/usr/lib/systemd/system/docker.socket:5: ListenStream= references a path below legacy directory /var/run/, updating /var/run/docker.sock → /run/docker.sock; please update the unit file accordingly.
+```
+
+Signed-off-by: Wiktor Kwapisiewicz <wiktor@metacode.biz>
+Upstream-commit: 8abf26dbfb19c52aede5930383859d1cc59dbab8
+Component: engine
+
+Upstream-Status: Backport [66b48fb029f67e7fe452bca272d6cffce805b707]
+
+Signed-off-by: Chen Qi <Qi.Chen@windriver.com>
+---
+ components/engine/contrib/init/systemd/docker.socket | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/components/engine/contrib/init/systemd/docker.socket b/components/engine/contrib/init/systemd/docker.socket
+index 7dd95098e4..dd015e123a 100644
+--- a/src/import/components/engine/contrib/init/systemd/docker.socket
++++ b/src/import/components/engine/contrib/init/systemd/docker.socket
+@@ -3,7 +3,9 @@ Description=Docker Socket for the API
+ PartOf=docker.service
+ 
+ [Socket]
+-ListenStream=/var/run/docker.sock
++# If /var/run is not implemented as a symlink to /run, you may need to
++# specify ListenStream=/var/run/docker.sock instead.
++ListenStream=/run/docker.sock
+ SocketMode=0660
+ SocketUser=root
+ SocketGroup=docker
+-- 
+2.17.1
+
