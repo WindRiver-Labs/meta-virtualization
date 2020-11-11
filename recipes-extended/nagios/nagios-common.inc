@@ -15,6 +15,10 @@ FILES_${PN}-dbg += "${NAGIOS_PLUGIN_DIR}/.debug"
 
 DEPENDS = "nagios-core"
 
+# temporary restriction to x86
+COMPATIBLE_HOST = "(i.86|x86_64).*-linux"
+
+# original restriction which needs to be expanded
 COMPATIBLE_HOST_aarch64 = "null"
 
 inherit useradd
