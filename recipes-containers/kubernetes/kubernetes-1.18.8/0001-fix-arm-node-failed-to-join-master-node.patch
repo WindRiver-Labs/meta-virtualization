@@ -1,0 +1,37 @@
+From 9a26ea735f42582bc786c2ce74967f91b1de47b3 Mon Sep 17 00:00:00 2001
+From: Sakib Sajal <sakib.sajal@windriver.com>
+Date: Fri, 12 Jun 2020 11:35:20 -0400
+Subject: [PATCH] fix arm node failed to join master node
+
+Append the following lines to kubelet config during a 
+"kubeadm join" command on ARM architecture as a workaround
+for ARM node join failure:
+
+	evictionHard:
+	  memory.available:  "200Mi"
+
+Upstream-Status: Inappropriate [wrlinux specific]
+
+Signed-off-by: Sakib Sajal <sakib.sajal@windriver.com>
+---
+ cmd/kubeadm/app/phases/kubelet/config.go | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/cmd/kubeadm/app/phases/kubelet/config.go b/cmd/kubeadm/app/phases/kubelet/config.go
+index 4503d2ac99f..a3d15de73f3 100644
+--- a/src/import/cmd/kubeadm/app/phases/kubelet/config.go
++++ b/src/import/cmd/kubeadm/app/phases/kubelet/config.go
+@@ -143,6 +143,10 @@ func DownloadConfig(client clientset.Interface, kubeletVersion *version.Version,
+ 	if err != nil {
+ 		return err
+ 	}
++	// check if kubelet config is available, then append to configuration
++	if v, ok := kubeletCfg.Data[kubeadmconstants.KubeletBaseConfigurationConfigMapKey] ; ok {
++		kubeletCfg.Data[kubeadmconstants.KubeletBaseConfigurationConfigMapKey] = v + "evictionHard:\n  memory.available:  \"200Mi\"\n"
++	}
+ 
+ 	return writeConfigBytesToDisk([]byte(kubeletCfg.Data[kubeadmconstants.KubeletBaseConfigurationConfigMapKey]), kubeletDir)
+ }
+-- 
+2.24.0
+
