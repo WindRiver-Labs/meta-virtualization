@@ -1,0 +1,36 @@
+From 09b1d8d251b79a7ff0071adfadbadb846f839849 Mon Sep 17 00:00:00 2001
+From: Zqiang <qiang.zhang@windriver.com>
+Date: Thu, 29 Apr 2021 14:32:47 +0800
+Subject: [PATCH] openvswitch: fix netdev-dpdk compile error
+
+The rte_get_main_lcore() be defined only in DPDK 20.11,
+however in DPDK 19.11 is not exist, will trigger compile error,
+in DPDK 19.11 use rte_get_master_lcore() to get coreID.
+
+In DPDk 20.11, the rte_get_master_lcore() is just an
+encapsulation of rte_get_main_lcore(), so replace
+rte_get_main_lcore() with rte_get_master_lcore().
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ lib/netdev-dpdk.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/lib/netdev-dpdk.c b/lib/netdev-dpdk.c
+index 9d8096668..68f0d83f6 100644
+--- a/lib/netdev-dpdk.c
++++ b/lib/netdev-dpdk.c
+@@ -1306,7 +1306,7 @@ static int
+ vhost_common_construct(struct netdev *netdev)
+     OVS_REQUIRES(dpdk_mutex)
+ {
+-    int socket_id = rte_lcore_to_socket_id(rte_get_main_lcore());
++    int socket_id = rte_lcore_to_socket_id(rte_get_master_lcore());
+     struct netdev_dpdk *dev = netdev_dpdk_cast(netdev);
+
+     dev->vhost_rxq_enabled = dpdk_rte_mzalloc(OVS_VHOST_MAX_QUEUE_NUM *
+--
+2.17.1
+
