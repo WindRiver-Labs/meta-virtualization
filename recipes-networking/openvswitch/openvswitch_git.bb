@@ -28,14 +28,16 @@ SRC_URI += "git://github.com/openvswitch/ovs.git;protocol=git;branch=branch-2.15
             file://systemd-update-tool-paths.patch \
             file://systemd-create-runtime-dirs.patch \
             file://0001-ovs-use-run-instead-of-var-run-for-in-systemd-units.patch \
+            file://0001-openvswitch-fix-do_configure-with-DPDK-19.11-error.patch \
+            file://0001-openvswitch-fix-netdev-dpdk-compile-error.patch \
            "
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1ce5d23a6429dff345518758f13aaeab"
 
-DPDK_INSTALL_DIR ?= "/opt/dpdk"
+DPDK_INSTALL_DIR ?= "/usr/share/dpdk"
 
 PACKAGECONFIG ?= "libcap-ng"
-PACKAGECONFIG[dpdk] = "--with-dpdk=${STAGING_DIR_TARGET}${DPDK_INSTALL_DIR}/share/${TARGET_ARCH}-native-linuxapp-gcc,,dpdk,dpdk"
+PACKAGECONFIG[dpdk] = "--with-dpdk=static,,dpdk,dpdk"
 PACKAGECONFIG[libcap-ng] = "--enable-libcapng,--disable-libcapng,libcap-ng,"
 PACKAGECONFIG[ssl] = ",--disable-ssl,openssl,"
 
@@ -50,6 +52,15 @@ FILES_${PN} += "/lib/modules"
 inherit ptest
 
 EXTRA_OEMAKE += "TEST_DEST=${D}${PTEST_PATH} TEST_ROOT=${PTEST_PATH}"
+
+do_configure() {
+	if [ ${PREFERRED_VERSION_dpdk} = "19.11.%" ]; then
+		export DPDK_LIBS="-L${STAGING_DIR_TARGET}${DPDK_INSTALL_DIR}/${TARGET_ARCH}-native-linuxapp-gcc/lib -ldpdk"
+		export DPDK_CFLAGS="-I${STAGING_DIR_TARGET}${DPDK_INSTALL_DIR}/${TARGET_ARCH}-native-linuxapp-gcc/include"
+	fi
+
+	autotools_do_configure
+}
 
 do_install_ptest() {
 	oe_runmake test-install
