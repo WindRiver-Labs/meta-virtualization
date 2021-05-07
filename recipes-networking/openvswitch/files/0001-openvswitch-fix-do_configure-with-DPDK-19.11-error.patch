@@ -1,0 +1,32 @@
+From 327ce918b17173fad844707212e50bd1800b7cdc Mon Sep 17 00:00:00 2001
+From: Zqiang <qiang.zhang@windriver.com>
+Date: Thu, 29 Apr 2021 13:56:31 +0800
+Subject: [PATCH] openvswitch: fix do_configure with DPDK 19.11 error
+
+When openvswitch set '--with-dpdk=static' will check pkg-config
+version, if not mismatch, an do_configure error occurred, to
+avoid this error, change error to warning.
+
+Upstream-Status: Inappropriate
+
+Signed-off-by: Zqiang <qiang.zhang@windriver.com>
+---
+ acinclude.m4 | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/acinclude.m4 b/acinclude.m4
+index 435685c93..eb3d59fe2 100644
+--- a/acinclude.m4
++++ b/acinclude.m4
+@@ -371,7 +371,7 @@ AC_DEFUN([OVS_CHECK_DPDK], [
+               ;;
+             1)
+               AC_MSG_RESULT([yes])
+-              AC_MSG_ERROR([Please upgrade pkg-config])
++              AC_MSG_WARN([Please upgrade pkg-config])
+               ;;
+             *)
+               AC_MSG_ERROR([grep exited with status $status])
+--
+2.17.1
+
