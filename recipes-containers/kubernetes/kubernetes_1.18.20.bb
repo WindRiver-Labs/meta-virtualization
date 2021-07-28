@@ -5,7 +5,7 @@ applications across multiple hosts, providing basic mechanisms for deployment, \
 maintenance, and scaling of applications. \
 "
 
-SRCREV_kubernetes = "9f2892aab98fe339f3bd70e3c470144299398ace"
+SRCREV_kubernetes = "1f3e19b7beb1cc0110255668c4238ed63dadb7ad"
 SRCREV_kubernetes-release = "c600d12013979543fcfab24c977ffae158405a21"
 
 SRC_URI = "git://github.com/kubernetes/kubernetes.git;branch=release-1.18;name=kubernetes \
