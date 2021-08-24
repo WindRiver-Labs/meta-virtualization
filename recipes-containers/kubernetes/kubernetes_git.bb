@@ -98,7 +98,9 @@ INSANE_SKIP_${PN}-misc += "ldflags already-stripped"
 RDEPENDS_${PN} += "kubeadm \
                    kubectl \
                    kubelet \
-                   cni"
+                   cni \
+                   conntrack-tools \
+"
 
 RDEPENDS_kubeadm = "kubelet kubectl"
 FILES_kubeadm = "${bindir}/kubeadm ${systemd_unitdir}/system/kubelet.service.d/*"
