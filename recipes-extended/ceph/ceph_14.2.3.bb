@@ -8,7 +8,7 @@ inherit cmake pythonnative python-dir systemd
 # Disable python pybind support for ceph temporary, when corss compiling pybind,
 # pybind mix cmake and python setup environment, would case a lot of errors.
 
-SRC_URI = "http://download.ceph.com/tarballs/ceph-${PV}.tar.gz \
+SRC_URI = "https://download.ceph.com/tarballs/ceph_${PV}.orig.tar.gz \
            file://0001-ceph-fix-build-errors-for-cross-compile.patch \
            file://ceph.conf \
            file://0001-rgw-add-executor-type-for-basic_waitable_timers.patch \
