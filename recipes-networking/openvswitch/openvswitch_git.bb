@@ -30,6 +30,7 @@ SRC_URI += "git://github.com/openvswitch/ovs.git;protocol=git;branch=branch-2.15
             file://0001-ovs-use-run-instead-of-var-run-for-in-systemd-units.patch \
             file://0001-openvswitch-fix-do_configure-with-DPDK-19.11-error.patch \
             file://0001-openvswitch-fix-netdev-dpdk-compile-error.patch \
+            file://0001-ofp-actions-Fix-use-after-free-while-decoding-RAW_EN.patch \
            "
 
 LIC_FILES_CHKSUM = "file://LICENSE;md5=1ce5d23a6429dff345518758f13aaeab"
